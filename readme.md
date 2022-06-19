@@ -41,7 +41,7 @@ Ao criar um novo usuário como no exemplo abaixo usando a senha '12345' o sistem
 
 *OBS: neste caso a senha não retorna como  '1234' e sim criptografada impossivel ser decifrada apenas com o uso do bcrypt*
 
-<strong>Enviando dados:</strong>
+<strong>Enviando dados para o login:</strong>
 
 <img src='./src/assets/dadosusuario.png' />
 
@@ -49,6 +49,7 @@ Ao criar um novo usuário como no exemplo abaixo usando a senha '12345' o sistem
 
 <img src='./src/assets/loginsucesso.png' />
 
+O sistema gera um TOKEN com expiração de 7dias que então será enviado para header authorization.
 *OBS: caso ocorrer o login ser um sucesso o Retorno da API tem o status code Http 202.*
 
 <strong>caso algum dado(email, senha) estejam incorretos.</strong>

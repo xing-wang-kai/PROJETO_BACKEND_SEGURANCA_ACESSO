@@ -1,6 +1,13 @@
 import userModels from '../models/user.models';
 import { User } from '../config/types';
 
+/**
+ * UserServiçes se conecta ao banco de dados pelos methodos do sequelize e então retorna os valores conforme o methods CRUD
+ * GET    - Busca dados do usúario no banco de dados
+ * POST   - Posta dados de usuários no banco de dados
+ * PUT    - Edita dados de usuário no banco de dados
+ * DELETE - Deleta dados de usuário no banco de dados
+ */
 class UserService {
     getUsers = async () => {
         try{

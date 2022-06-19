@@ -16,7 +16,7 @@ class UserControllers{
                 .json({users: users})
         }catch(err: any){
             res.status(404)
-                .json(err)
+                .json({code: err.code, message: err.message})
         }
     }
     getUser = async (req: Request, res: Response) => {
@@ -55,7 +55,8 @@ class UserControllers{
             if(!user){
                 dados.password = await bcrypt.hash(dados.password, 12);
                 const novoUser = await userServices.createUser(dados);
-                res.status(202).json({message: `Usuário criado com sucesso`, user: dados, novoUser: novoUser})
+                const newUser = await userServices.findbyEmail(dados.email);
+                res.status(202).json({message: `Usuário criado com sucesso`, user: dados, novoUser: newUser})
             }else{
                 res.status(404).json({message: `Usuário já existe`})
             }

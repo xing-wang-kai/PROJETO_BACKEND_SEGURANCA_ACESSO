@@ -1,10 +1,12 @@
-import express, { NextFunction, Response, Request } from 'express';
+import express, { NextFunction, Response, Request, ErrorRequestHandler } from 'express';
 import cors from 'cors';
 import path from 'path';
+import passport from './passport';
 import userRouter from '../routers/user.routers';
 
 export = () => {
     const app = express();
+    app.use(passport.initialize());
     app.use(express.json());
     app.use(express.text());
     app.use(express.raw());
@@ -33,13 +35,28 @@ export = () => {
     //         next();
     //     }
     // });
-
+    
     app.use((req: Request, res: Response, next: NextFunction)=>{
         res.set('Last-Modified', String(new Date()));
         res.set('X-Powered-By', 'Kai Wang Segurança autendificação api');
         next();
     })
     app.use('/api', userRouter);
+
+    const errorHandle: ErrorRequestHandler = (err, req: Request, res: Response, next: NextFunction ) => {
+        if(err){
+            if(err.status){
+                res.status(err.status)
+            }
+            else{
+                res.status(400)
+            }
+            res.json(err);
+            console.log(err)
+        }
+    }
+    app.use(errorHandle);
+
     app.use((req: Request, res: Response)=>{
         res.status(404).json({message: 'rota não localizada'})
     })
