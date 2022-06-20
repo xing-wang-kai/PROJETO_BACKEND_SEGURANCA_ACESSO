@@ -10,6 +10,7 @@ import dotenv from 'dotenv';
 
 import UserService from '../services/user.services';
 import {Request, Response, NextFunction} from 'express';
+import blockList from "../redis/blocklistHandle";
 
 dotenv.config();
 
@@ -45,12 +46,17 @@ passport.use(new LocalStrategy(localOptions, async (email, senha, done) =>{
     return done(null, user);
 } ))
 
-passport.use(new BearerStrategy( async (token, done)=>{
+passport.use(new BearerStrategy( async (token: string, done)=>{
     try{
-        const payload: string | JWT.JwtPayload | any = JWT.verify(token, process.env.JWT_KEY as string);
-        const user = await UserService.getUser(payload.id);
-        if(!user){return done(notAuthJson, false);}
-        return done(null, user);
+        if(!await blockList.contemToken(token)){
+            const payload: string | JWT.JwtPayload | any = JWT.verify(token, process.env.JWT_KEY as string);
+            const user = await UserService.getUser(payload.id);
+            if(!user){return done(notAuthJson, false);}
+            return done(null, {user: user, token: token});
+        }else{
+            done({message: notAuthJson, erro: 'token inválido por logout'})
+        }
+        
     }catch(err){
         return done(err, false)
     }
@@ -82,6 +88,12 @@ export const privateRouter = {
         const authFunction = passport.authenticate('bearer',{session: false}, (err, user, info)=>{
             if(err && err.name === 'InvalidArgumentError'){
                 res.status(401).json({code: err.code, message: err.message, name: err.name, middlesware: notAuthJson})
+            }
+            if(err && err.name === 'JsonWebTokenError'){
+                res.status(401).json({code: err.code, message: err.message, name: err.name, middlesware: notAuthJson})
+            }
+            if(err && err.name === 'TokenExpired'){
+                res.status(401).json({code: err.code, message: err.message, name: err.name, middlesware: notAuthJson, ExpiradoEm: err.expiredAt})
             }
             if(err){
                 res.status(500).json({code: err.code, message: err.message, name: err.name, middlesware: notAuthJson})

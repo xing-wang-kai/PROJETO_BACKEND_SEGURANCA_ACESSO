@@ -2,6 +2,20 @@ import customExpress from './config/customExpress'
 import dotenv from 'dotenv';
 dotenv.config();
 
+import client from './redis/blocklist'
+client.connect()
+        .then(()=>console.log('Redis - conexão realizada com sucesso'))
+        .catch((err: any)=>{console.log({err: err.message})});
+
+// client.on('error', (err) => {
+//     if(err){
+//         console.log('Redis Client Error', err)
+//     }
+//     else{
+//         console.log('Redis Cliente conexão realizada com sucesso')
+//     }
+// });
+
 const app = customExpress();
 /**
  * Verific a Porta a API e então retorna um valor formatado em número armazenado em dotenv.

@@ -2,6 +2,7 @@ import { Request, Response} from 'express';
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import blocklist from '../redis/blocklistHandle'
 
 import userServices from "../services/user.services";
 import { User } from '../config/types';
@@ -19,6 +20,7 @@ class UserControllers{
     getUsers = async (req: Request, res: Response) => {
         try{
             const users = await userServices.getUsers();
+            
             res.status(200)
                 .json({users: users})
         }catch(err: any){
@@ -97,6 +99,19 @@ class UserControllers{
         }else{
             res.status(404).json({message: `usuário ou email não informado`})
         }
+    }
+    logoutUser = async ( req: Request, res: Response)=>{
+        try{
+            const user: any = req.user;
+            const token: any =  user.token;
+            console.log(token)
+            await blocklist.adiciona(token)
+            console.log(token)
+            res.status(204).json({message: 'logout realizado com sucesso'}).end()
+        }catch(err: any){
+            res.status(404).json({message: 'logout não realizado erro'})
+        }
+        
     }
     updateUser = async (req: Request, res: Response) => {
         try{

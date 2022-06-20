@@ -17,20 +17,13 @@ router.route('/users/register')
       .post(userController.registrarUser)
 router.route('/users/login')
       .get(userController.loginUser)
+router.route('/users/logout')
+      .get(privateRouter.Bearer, userController.logoutUser)
 router.route('/useres/:id')
-      .get(userController.getUser)
-      .put(userController.updateUser)
-      .delete(userController.deleteUser)
+      .get(privateRouter.Bearer, userController.getUser)
+      .put(privateRouter.Bearer, userController.updateUser)
+      .delete(privateRouter.Bearer, userController.deleteUser)
 router.route('/email')
-      .get(nodeMailerController.contato)
-
-// router.get('/users',privateRouterJWT, userController.getUsers);
-// router.post('/users/register', userController.registrarUser);
-// router.get('/users/login', userController.loginUser);
-// router.get('/users/:id',auth.private, userController.getUser);
-// router.post('/users',auth.private, userController.createUser);
-// router.put('/users/:id',auth.private, userController.updateUser);
-// router.delete('/users/:id',auth.private, userController.deleteUser);
-// router.get('/email', nodeMailerController.contato);
+      .get(privateRouter.Bearer, nodeMailerController.contato)
 
 export default router
