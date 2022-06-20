@@ -7,8 +7,15 @@ import userServices from "../services/user.services";
 import { User } from '../config/types';
 
 dotenv.config();
-
+/**
+ * Classe Usuário Recebe todas Rotas necessárias para retornar valores informado no banco de dados para usários, está class se comunica diretamente com o services e faz as requisições para o banco de dado.
+ */
 class UserControllers{
+    /**
+     * Este metodo dentro da class user faz a solcitação da requisição e estnão retorna um array com todos objetos de usuários  que estão includos dentro da API.
+     * @param req Requisição.
+     * @param res Resposta da Requisão.
+     */
     getUsers = async (req: Request, res: Response) => {
         try{
             const users = await userServices.getUsers();

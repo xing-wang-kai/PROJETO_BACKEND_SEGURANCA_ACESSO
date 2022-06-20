@@ -21,20 +21,23 @@ export = () => {
         app.use(cors());
         next();
     });
+/**
+ * Esta Requisição somente permite formato aceito do tipo Json na requisições. e então adiciona ao headers o formado aceito para que a API Funcione.
+ */
+    app.use( (req: Request, res: Response, next: NextFunction)=>{
+        let formatRequest = req.header('Accept');
+        if(formatRequest === '*/*'){
+            formatRequest = 'application/json';
+        }
 
-    // app.use( (req: Request, res: Response, next: NextFunction)=>{
-    //     let formatRequest = req.header('Accept');
-    //     if(formatRequest === '*/*'){
-    //         formatRequest = 'application/json';
-    //     }
-    //     if(formatRequest !== 'application/json'){
-    //         res.status(404).json({message: `o Formato: ${formatRequest} é inválido somente JSON é aceito`})
-    //     }
-    //     else{
-    //         res.end()
-    //         next();
-    //     }
-    // });
+        if(formatRequest !== 'application/json'){
+            res.status(404).json({message: `o Formato: ${formatRequest} é inválido somente JSON é aceito`})
+        }
+        else{
+            console.log(formatRequest);
+            next();
+        }
+    });
     
     app.use((req: Request, res: Response, next: NextFunction)=>{
         res.set('Last-Modified', String(new Date()));
