@@ -33,7 +33,7 @@ O usuário envia o Login e senha para o sistema, o sistema compara a senha com a
 
 Ao criar um usuário como no exemplo abaixo usando a senha '12345' o sistema usa o método HASH do BCRYPT e então criptografa a senha, salvando a mesma com um SALT de 12 para evitar a descriptografar, somente via esta API é possível descriptografar a senha.
 
-<img src='./src/assets/dadosenviadosparacadastrar.png' />
+<img src='https://github.com/xing-wang-kai/PROJETO_BACKEND_SEGURANCA_ACESSO/blob/master/src/assets/dadosenviadosparacadastrar.png' alt='imagem de dados enviados para cadastrar em png' />
 
 <strong>Retorno da API caso o usuário informado não exista:</strong>
 
